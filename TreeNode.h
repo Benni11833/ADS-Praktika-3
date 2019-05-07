@@ -24,7 +24,7 @@ class TreeNode{
 		bool red;
 	public:
 		TreeNode(int NodePosID, int NodeID, std::string Name, 
-						int Alter, double Einkommen, int PLZ);
+						int Alter, double Einkommen, int PLZ, bool red);
 		//Getter-/Setter
 		int getNodePosID();
 		int getNodeID();

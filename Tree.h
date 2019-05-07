@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 class Tree {
 private:
 	TreeNode * anker;
@@ -28,6 +27,7 @@ private:
 	void printLevelOrder(void);
 	bool rotateTreeRight(TreeNode*, TreeNode*);
 	bool rotateTreeLeft(TreeNode*, TreeNode*);
+	void addNode(std::string, int, double, int);
 public:
 	Tree();
 	void addNode(std::string Name, int Alter, double Einkommen, int PLZ);

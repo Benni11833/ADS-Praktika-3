@@ -37,12 +37,12 @@ TEST_CASE("Tree Testing", "[TREE]" ) {
 	
 		nTree->addNode("Mayer", 20, 0, 0);
 		nTree->addNode("Mayer2", 10, 0, 0);
-		nTree->addNode("Mayer3", 30, 0, 0);
-		nTree->addNode("Mayer4", 40, 0, 0);
-		nTree->addNode("Mayer5", 35, 0, 0);
+		nTree->addNode("Mayer3", 35, 0, 0);
+		nTree->addNode("Mayer4", 26, 0, 0);
+		nTree->addNode("Mayer5", 40, 0, 0);
 		nTree->addNode("Mayer6", 25, 0, 0);
-		nTree->addNode("Mayer7", 26, 0, 0);	
-				
+		nTree->addNode("Mayer7", 30, 0, 0);	
+						
 		REQUIRE(nTree->searchNode("Mayer") == true);
 		REQUIRE(nTree->searchNode("Mayer7") == true);
 		REQUIRE(nTree->searchNode("Mayer6") == true);
@@ -53,177 +53,163 @@ TEST_CASE("Tree Testing", "[TREE]" ) {
 
 		REQUIRE(nTree->searchNode("Mueller") == false);
 		REQUIRE(nTree->searchNode("Mayer99") == false);
+
+		TreeNode * tanker = get_anker(*nTree);
+		REQUIRE(tanker->getRed() == false);
+		REQUIRE(tanker->getLeft()->getRed() == false);
+		REQUIRE(tanker->getRight()->getRed() == true);
+		REQUIRE(tanker->getRight()->getLeft()->getRed() == false);
+		REQUIRE(tanker->getRight()->getRight()->getRed() == false);
+		REQUIRE(tanker->getRight()->getLeft()->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getLeft()->getRight()->getRed() == true);
+	}
+
+	SECTION("Hinzufuegen in Baum mit Linkssrotationen") {
+		nTree->addNode("Mayer", 20, 0, 0);
+		nTree->addNode("Mayer2", 10, 0, 0);
+		nTree->addNode("Mayer3", 30, 0, 0);
+
+		TreeNode * tanker = get_anker(*nTree);
+		REQUIRE(tanker->getRed() == false);
+		REQUIRE(tanker->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getRed() == true);
+
+		nTree->addNode("Mayer4", 40, 0, 0);
+		nTree->addNode("Mayer5", 45, 0, 0);
+
+		REQUIRE(tanker->getLeft()->getRed() == false);
+		REQUIRE(tanker->getRight()->getNodePosID() == 40);
+		REQUIRE(tanker->getRight()->getRed() == false);
+		REQUIRE(tanker->getRight()->getLeft()->getNodePosID() == 30);
+		REQUIRE(tanker->getRight()->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getRight()->getNodePosID() == 45);
+		REQUIRE(tanker->getRight()->getRight()->getRed() == true);
 	}
 	
-	SECTION("Loeschen von Nodes - ohne Nachfolger"){
-
+	SECTION("Hinzufuegen in Baum mit Rechtsrotationen") {
 		nTree->addNode("Mayer", 20, 0, 0);
 		nTree->addNode("Mayer2", 10, 0, 0);
 		nTree->addNode("Mayer3", 30, 0, 0);
-		nTree->addNode("Mayer4", 40, 0, 0);
-		nTree->addNode("Mayer5", 35, 0, 0);
-		nTree->addNode("Mayer6", 25, 0, 0);
-		nTree->addNode("Mayer7", 26, 0, 0);
 
-		nTree->addNode("Mayer8", 8, 0, 0);
-		REQUIRE(nTree->searchNode("Mayer8") == true);
+		TreeNode * tanker = get_anker(*nTree);
+		REQUIRE(tanker->getRed() == false);
+		REQUIRE(tanker->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getRed() == true);
 
-		TreeNode * tnanker = get_anker(*nTree);
+		nTree->addNode("Mayer4", 7, 0, 0);
+		nTree->addNode("Mayer5", 3, 0, 0);
 
-		nTree->deleteNode(8);
-		REQUIRE(tnanker->getLeft()->getLeft() == nullptr);		
-	} 
-
-	SECTION("Loeschen von Nodes - mit einem Nachfolger") {
-		
-		nTree->addNode("Mayer", 20, 0, 0);
-		nTree->addNode("Mayer2", 10, 0, 0);
-		nTree->addNode("Mayer3", 30, 0, 0);
-		nTree->addNode("Mayer4", 40, 0, 0);
-		nTree->addNode("Mayer5", 35, 0, 0);
-		nTree->addNode("Mayer6", 25, 0, 0);
-		nTree->addNode("Mayer7", 26, 0, 0);
-
-		nTree->addNode("Mayer8", 8, 0, 0);
-		nTree->addNode("Mayer9", 7, 0, 0);
-
-		REQUIRE(nTree->searchNode("Mayer8") == true);
-		REQUIRE(nTree->searchNode("Mayer9") == true);
-		
-		TreeNode * tnanker = get_anker(*nTree);
-
-		//linke Seite
-		nTree->deleteNode(8);
-		REQUIRE(tnanker->getLeft()->getLeft() != nullptr);
-		REQUIRE(tnanker->getLeft()->getRight() == nullptr);
-		REQUIRE(tnanker->getLeft()->getLeft()->getNodePosID()==7);
-
-		nTree->deleteNode(7);
-		REQUIRE(tnanker->getLeft()->getLeft() == nullptr);
-		REQUIRE(tnanker->getLeft()->getRight()== nullptr);
-		REQUIRE(tnanker->getLeft()->getNodePosID() == 10);
-
-		REQUIRE(nTree->searchNode("Mayer8") == false);
-		REQUIRE(nTree->searchNode("Mayer9") == false);
-
-		//rechte Seite
-		nTree->addNode("Mayer8", 8, 0, 0);
-		nTree->addNode("Mayer9", 9, 0, 0);
-		REQUIRE(nTree->searchNode("Mayer8") == true);
-		REQUIRE(nTree->searchNode("Mayer9") == true);
-
-		nTree->deleteNode(8);
-		REQUIRE(tnanker->getLeft()->getLeft() != nullptr);
-		REQUIRE(tnanker->getLeft()->getLeft()->getNodePosID() == 9);
-
-		nTree->deleteNode(9);
-		REQUIRE(tnanker->getLeft()->getLeft() == nullptr);
-		REQUIRE(tnanker->getLeft()->getNodePosID() == 10);
-
-		REQUIRE(nTree->searchNode("Mayer8") == false);
-		REQUIRE(nTree->searchNode("Mayer9") == false);
+		REQUIRE(tanker->getRight()->getRed() == false);
+		REQUIRE(tanker->getLeft()->getRed() == false);
+		REQUIRE(tanker->getLeft()->getNodePosID() == 7);
+		REQUIRE(tanker->getLeft()->getLeft()->getNodePosID() == 3);
+		REQUIRE(tanker->getLeft()->getLeft()->getRed() == true);
+		REQUIRE(tanker->getLeft()->getRight()->getNodePosID() == 10);
+		REQUIRE(tanker->getLeft()->getRight()->getRed() == true);
 	}
 
-	SECTION("Loeschen von Nodes - mit zwei Nachfolger") {
-		
+	SECTION("Hinzufuegen in Baum mit Rechts-Linksrotationen") {
 		nTree->addNode("Mayer", 20, 0, 0);
 		nTree->addNode("Mayer2", 10, 0, 0);
 		nTree->addNode("Mayer3", 30, 0, 0);
+
+		TreeNode * tanker = get_anker(*nTree);
+		REQUIRE(tanker->getRed() == false);
+		REQUIRE(tanker->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getRed() == true);
+
 		nTree->addNode("Mayer4", 40, 0, 0);
 		nTree->addNode("Mayer5", 35, 0, 0);
-		nTree->addNode("Mayer6", 25, 0, 0);
-		nTree->addNode("Mayer7", 26, 0, 0);
 
-		TreeNode * tnanker = get_anker(*nTree);
-
-		REQUIRE(tnanker->getNodePosID() == 20);
-		REQUIRE(tnanker->getRight()->getNodePosID() == 30);
-		REQUIRE(tnanker->getRight()->getLeft()->getNodePosID() == 25);
-		REQUIRE(tnanker->getRight()->getLeft()->getRight()->getNodePosID() == 26);
-		REQUIRE(tnanker->getRight()->getRight()->getLeft()->getNodePosID() == 35);
-		
-		nTree->deleteNode(30);
-		REQUIRE(tnanker->getNodePosID() == 20);
-		REQUIRE(tnanker->getRight()->getNodePosID() == 35);
-		REQUIRE(tnanker->getRight()->getRight()->getNodePosID() == 40);
-		REQUIRE(tnanker->getRight()->getRight()->getLeft() == nullptr);
-		REQUIRE(tnanker->getRight()->getRight()->getRight() == nullptr);
-		REQUIRE(tnanker->getRight()->getLeft()->getNodePosID() == 25);
-		REQUIRE(tnanker->getRight()->getLeft()->getRight()->getNodePosID() == 26);
-		REQUIRE(tnanker->getRight()->getLeft()->getLeft() == nullptr);
-
-		nTree->deleteNode(35);
-		REQUIRE(tnanker->getNodePosID() == 20);
-		REQUIRE(tnanker->getRight()->getNodePosID() == 40);
-		REQUIRE(tnanker->getRight()->getLeft()->getNodePosID() == 25);		
+		REQUIRE(tanker->getLeft()->getRed() == false);
+		REQUIRE(tanker->getRight()->getNodePosID() == 35);
+		REQUIRE(tanker->getRight()->getRed() == false);
+		REQUIRE(tanker->getRight()->getLeft()->getNodePosID() == 30);
+		REQUIRE(tanker->getRight()->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getRight()->getNodePosID() == 40);
+		REQUIRE(tanker->getRight()->getRight()->getRed() == true);
 	}
 
-	SECTION("Loeschen von Nodes - ab Wurzel") {
-
+	SECTION("Hinzufuegen in Baum mit Links-Rechtsrotationen") {
 		nTree->addNode("Mayer", 20, 0, 0);
 		nTree->addNode("Mayer2", 10, 0, 0);
 		nTree->addNode("Mayer3", 30, 0, 0);
-		nTree->addNode("Mayer4", 40, 0, 0);
-		nTree->addNode("Mayer5", 35, 0, 0);
-		nTree->addNode("Mayer6", 25, 0, 0);
-		nTree->addNode("Mayer7", 26, 0, 0);
 
-		TreeNode * tnanker = get_anker(*nTree);  // Initiale Übergrabe des Ankers
+		TreeNode * tanker = get_anker(*nTree);
+		REQUIRE(tanker->getRed() == false);
+		REQUIRE(tanker->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getRed() == true);
 
-		/*
-		Lösche den Baum schrittweise durch entfernen der Wurzel
-		*/
-		REQUIRE(tnanker->getNodePosID() == 20);
-		nTree->deleteNode(20);
-		tnanker = get_anker(*nTree); // Anker hat sich geändert, neue Übergabe erfoderlich
+		nTree->addNode("Mayer4", 7, 0, 0);
+		nTree->addNode("Mayer5", 8, 0, 0);
 
-		REQUIRE(tnanker->getNodePosID() == 25);
-		REQUIRE(tnanker->getRight()->getNodePosID() == 30);
-		REQUIRE(tnanker->getRight()->getLeft()->getNodePosID() == 26);
-		REQUIRE(tnanker->getRight()->getRight()->getNodePosID() == 40);	
+		REQUIRE(tanker->getRight()->getRed() == false);
+		REQUIRE(tanker->getLeft()->getRed() == false);
+		REQUIRE(tanker->getLeft()->getNodePosID() == 8);
+		REQUIRE(tanker->getLeft()->getLeft()->getNodePosID() == 7);
+		REQUIRE(tanker->getLeft()->getLeft()->getRed() == true);
+		REQUIRE(tanker->getLeft()->getRight()->getNodePosID() == 10);
+		REQUIRE(tanker->getLeft()->getRight()->getRed() == true);
+	}
 
-		nTree->deleteNode(25);
-		tnanker = get_anker(*nTree); // Anker hat sich geändert, neue Übergabe erfoderlich
+	SECTION("Hinzufuegen mit Rechtsrotationen - Anker") {
+		nTree->addNode("Mayer", 20, 0, 0);
+		nTree->addNode("Mayer2", 10, 0, 0);
+		nTree->addNode("Mayer3", 5, 0, 0);
 
-		REQUIRE(tnanker->getNodePosID() == 26);
-		REQUIRE(tnanker->getRight()->getNodePosID() == 30);
-		REQUIRE(tnanker->getRight()->getLeft()==nullptr);
-		REQUIRE(tnanker->getRight()->getRight()->getNodePosID() == 40);
-		
-		nTree->deleteNode(26);
-		tnanker = get_anker(*nTree); // Anker hat sich geändert, neue Übergabe erfoderlich
+		TreeNode * tanker = get_anker(*nTree);
 
-		REQUIRE(tnanker->getNodePosID() == 30);
-		REQUIRE(tnanker->getRight()->getNodePosID() == 40);
-		REQUIRE(tnanker->getRight()->getLeft()->getNodePosID() == 35);
-		REQUIRE(tnanker->getRight()->getRight()== nullptr);
+		REQUIRE(tanker->getNodePosID() == 10);
+		REQUIRE(tanker->getRed() == false);
+		REQUIRE(tanker->getLeft()->getNodePosID() == 5);
+		REQUIRE(tanker->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getNodePosID() == 20);
+		REQUIRE(tanker->getRight()->getRed() == true);
+	}
 
-		nTree->deleteNode(30);
-		tnanker = get_anker(*nTree); // Anker hat sich geändert, neue Übergabe erfoderlich
+	SECTION("Hinzufuegen mit Linksrotationen - Anker") {
+		nTree->addNode("Mayer", 20, 0, 0);
+		nTree->addNode("Mayer2", 30, 0, 0);
+		nTree->addNode("Mayer3", 40, 0, 0);
 
-		REQUIRE(tnanker->getNodePosID() == 35);
-		REQUIRE(tnanker->getRight()->getNodePosID() == 40);
-		REQUIRE(tnanker->getRight()->getLeft() == nullptr);
-		REQUIRE(tnanker->getRight()->getRight() == nullptr);
-	
-		nTree->deleteNode(35);
-		tnanker = get_anker(*nTree); // Anker hat sich geändert, neue Übergabe erfoderlich
+		TreeNode * tanker = get_anker(*nTree);
 
-		REQUIRE(tnanker->getNodePosID() == 40);
-		REQUIRE(tnanker->getRight() == nullptr);
-		REQUIRE(tnanker->getLeft()->getNodePosID() == 10);
+		REQUIRE(tanker->getNodePosID() == 30);
+		REQUIRE(tanker->getRed() == false);
+		REQUIRE(tanker->getLeft()->getNodePosID() == 20);
+		REQUIRE(tanker->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getNodePosID() == 40);
+		REQUIRE(tanker->getRight()->getRed() == true);
+	}
 
-		nTree->deleteNode(40);
-		tnanker = get_anker(*nTree); // Anker hat sich geändert, neue Übergabe erfoderlich
+	SECTION("Hinzufuegen mit Links-Rechtsrotationen - Anker") {
+		nTree->addNode("Mayer", 20, 0, 0);
+		nTree->addNode("Mayer2", 5, 0, 0);
+		nTree->addNode("Mayer3", 10, 0, 0);
 
-		REQUIRE(tnanker->getNodePosID() == 10);
-		REQUIRE(tnanker->getRight() == nullptr);
-		REQUIRE(tnanker->getLeft() == nullptr);
-		
-		nTree->deleteNode(10);
-		tnanker = get_anker(*nTree); // Anker hat sich geändert, neue Übergabe erfoderlich
+		TreeNode * tanker = get_anker(*nTree);
 
-		REQUIRE(tnanker == nullptr);		
+		REQUIRE(tanker->getNodePosID() == 10);
+		REQUIRE(tanker->getRed() == false);
+		REQUIRE(tanker->getLeft()->getNodePosID() == 5);
+		REQUIRE(tanker->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getNodePosID() == 20);
+		REQUIRE(tanker->getRight()->getRed() == true);
+	}
+
+	SECTION("Hinzufuegen mit Rechts-Linksrotationen - Anker") {
+		nTree->addNode("Mayer", 20, 0, 0);
+		nTree->addNode("Mayer2", 40, 0, 0);
+		nTree->addNode("Mayer3", 30, 0, 0);
+
+		TreeNode * tanker = get_anker(*nTree);
+
+		REQUIRE(tanker->getNodePosID() == 30);
+		REQUIRE(tanker->getRed() == false);
+		REQUIRE(tanker->getLeft()->getNodePosID() == 20);
+		REQUIRE(tanker->getLeft()->getRed() == true);
+		REQUIRE(tanker->getRight()->getNodePosID() == 40);
+		REQUIRE(tanker->getRight()->getRed() == true);
 	}
 	
 	SECTION("Hinzufuegen von Nodes - Erzeuge Grossbaum"){
@@ -260,7 +246,7 @@ TEST_CASE("TreeNode Testing", "[TREENODE]" ) {
 		REQUIRE(ref->getEinkommen() == 0);
 		REQUIRE(ref->getLeft() == nullptr);
 		REQUIRE(ref->getRight() == nullptr);
-		REQUIRE(ref->getNodeID() == 0);
+		REQUIRE(ref->getNodeID() == 1);
 		REQUIRE(ref->getNodePosID() == 20);
 		REQUIRE(ref->getPLZ() == 0);
 	}
@@ -291,4 +277,4 @@ TEST_CASE("TreeNode Testing", "[TREENODE]" ) {
 }
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // http://www.hashemall.com/
-// Zeile 1-291 hat den SHA 256 Hashwert: F87C64B1D8F66C7C18FB2EF4B3696AD49A939784186E7E3824749CFA707C1620
+// Zeile 1-291 hat den SHA 256 Hashwert: 131B33B1910C8097CB5E431FF1058E1388580D875B14BAEF47DC4E44ED43A576

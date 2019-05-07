@@ -8,9 +8,9 @@
 #include <string>
 #include <iomanip>
 
-TreeNode::TreeNode(int NodePosID, int NodeID, std::string Name, int Alter, double Einkommen, int PLZ)
+TreeNode::TreeNode(int NodePosID, int NodeID, std::string Name, int Alter, double Einkommen, int PLZ, bool red)
 	:NodePosID{ NodePosID }, NodeID{ NodeID }, Name{ Name }, Alter{ Alter }, Einkommen{ Einkommen }, PLZ{ PLZ },
-	left{ nullptr }, right{ nullptr }
+	left{ nullptr }, right{ nullptr }, red{ red }
 {}
 
 void TreeNode::setRed(bool flag){

@@ -8,31 +8,9 @@
 #include <iostream>
 #include <iomanip>
 #include <queue>
+#include <stack>
 
 using namespace std;
-
-
-bool Tree::rec_searchNode(TreeNode* tmp, std::string Name)
-{
-	static bool flag{ false };
-	if (tmp == anker)	//wenn flag auf true steht von vorherigen aufrufen
-		flag = false;
-	if (tmp) {
-		if (tmp->getName() == Name) {
-			flag = true;
-			std::cout << "NodeID: " << tmp->getNodeID() << ", Name: " << tmp->getName()
-				<< ", Alter: " << tmp->getAlter() << ", Einkommen: " << tmp->getEinkommen()
-				<< ", PLZ: " << tmp->getPLZ() << ", PosID: " << tmp->getNodePosID()
-				<< std::endl;
-		}
-			//Teilbaum weiter durchlaufen - links,rechts
-			rec_searchNode(tmp->getLeft(), Name);
-			rec_searchNode(tmp->getRight(), Name);
-		
-		if (tmp == anker)
-			return flag;	//baum wurde durchlaufen
-	}
-}
 
 bool Tree::isLeaf(TreeNode* tmp) {
 	return (!tmp->getRight() && !tmp->getLeft());
@@ -150,10 +128,28 @@ void Tree::addNode(std::string Name, int Alter, double Einkommen, int PLZ)
 
 bool Tree::searchNode(std::string Name)
 {
-	if (anker)
-		return rec_searchNode(anker, Name);
-	else
-		return false;
+	bool flag{ false };
+	if (anker) {
+		std::queue<TreeNode*> q;
+		TreeNode *k{ anker };
+		q.push(anker);
+		while (!q.empty()) {
+			k = q.front();
+			q.pop();
+			if (k->getName() == Name) {
+				flag = true;
+				std::cout << "NodeID: " << k->getNodeID() << ", Name: " << k->getName()
+					<< ", Alter: " << k->getAlter() << ", Einkommen: " << k->getEinkommen()
+					<< ", PLZ: " << k->getPLZ() << ", PosID: " << k->getNodePosID()
+					<< std::endl;
+			}
+			if (k->getRight())
+				q.push(k->getRight());
+			if (k->getLeft())
+				q.push(k->getLeft());
+		}
+	}
+	return flag;
 }
 
 bool Tree::balanceTree(void)	//false wenn nicht ausbalanciert wurde, true wenn doch

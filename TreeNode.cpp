@@ -93,5 +93,5 @@ void TreeNode::setRight(TreeNode *new_right)
 
 void TreeNode::print()
 {
-	std::cout << NodeID << std::right << std::setw(setw_width) << '|' << Name << std::right << std::setw(setw_width) << '|' << Alter << std::right << std::setw(setw_width) << '|' << Einkommen << std::right << std::setw(setw_width) << '|' << PLZ << std::right << std::setw(setw_width) << '|' << NodePosID << std::endl;
+	std::cout << NodeID << std::right << std::setw(setw_width) << '|' << Name << std::right << std::setw(setw_width) << '|' << Alter << std::right << std::setw(setw_width) << '|' << Einkommen << std::right << std::setw(setw_width) << '|' << PLZ << std::right << std::setw(setw_width) << '|' << NodePosID << std::setw(setw_width) << '|' << red << std::endl;
 }

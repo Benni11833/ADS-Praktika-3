@@ -106,7 +106,7 @@ bool Tree::rotateTreeRight(TreeNode *p1, TreeNode *p2)
 void Tree::addNode(std::string Name, int Alter, double Einkommen, int PLZ)
 {
 	int NodePosID = Alter + PLZ + Einkommen;
-	TreeNode* new_entry = new TreeNode{ NodePosID, NodeIDCounter++, Name, Alter, Einkommen, PLZ , 1};
+	TreeNode* new_entry = new TreeNode{ NodePosID, NodeIDCounter++, Name, Alter, Einkommen, PLZ , 1};	//neuer Eintrag soll Rot sein
 		TreeNode* y{ nullptr }, *x{ anker };
 		while (x) {
 			y = x;
@@ -124,6 +124,7 @@ void Tree::addNode(std::string Name, int Alter, double Einkommen, int PLZ)
 				y->setLeft(new_entry);
 			else
 				y->setRight(new_entry);
+
 }
 
 bool Tree::searchNode(std::string Name)
@@ -152,9 +153,13 @@ bool Tree::searchNode(std::string Name)
 	return flag;
 }
 
-bool Tree::balanceTree(void)	//false wenn nicht ausbalanciert wurde, true wenn doch
+bool Tree::balanceTree(void)	//durchlaeuft baum, prueft ob balanciert(rotiert) werden muss
 {
-	return false;
+	/*
+	Kinder von roten Knoten sind schwarz
+	Keine zwei aufeinanderfolgende rote Knoten
+	--> Jeder Pfad von k zu einem Blatt enthaelt gleiche Anzahl an schwarzer Knoten
+	*/
 }
 
 void Tree::printLevelOrder(void)

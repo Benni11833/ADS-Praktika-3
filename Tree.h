@@ -14,7 +14,6 @@ class Tree {
 private:
 	TreeNode * anker;
 	int NodeIDCounter;
-	bool rec_searchNode(TreeNode* tmp, std::string Name);
 	TreeNode* searchNode(int NodePosID);
 	bool isLeaf(TreeNode*);
 	bool isRoot(TreeNode*);
@@ -27,11 +26,13 @@ private:
 	void printLevelOrder(void);
 	bool rotateTreeRight(TreeNode*, TreeNode*);
 	bool rotateTreeLeft(TreeNode*, TreeNode*);
-	void addNode(std::string, int, double, int);
 public:
 	Tree();
 	void addNode(std::string Name, int Alter, double Einkommen, int PLZ);
 	bool searchNode(std::string Name);
 	// friend-Funktionen sind f�r die Tests erforderlich und m�ssen unangetastet bleiben! 
 	friend TreeNode * get_anker(Tree& TN);
+	void printAll() {
+		print_preorder(anker);
+	}
 };

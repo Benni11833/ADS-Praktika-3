@@ -124,7 +124,9 @@ void Tree::addNode(std::string Name, int Alter, double Einkommen, int PLZ)
 				y->setLeft(new_entry);
 			else
 				y->setRight(new_entry);
-
+		if (getParent(new_entry)->getRed() && new_entry->getRed())	//wenn New_entry und parent rot sind, alle umfaerben außer wurzel
+			;
+		//balanceTree();	//balanciert baum
 }
 
 bool Tree::searchNode(std::string Name)
@@ -160,6 +162,27 @@ bool Tree::balanceTree(void)	//durchlaeuft baum, prueft ob balanciert(rotiert) w
 	Keine zwei aufeinanderfolgende rote Knoten
 	--> Jeder Pfad von k zu einem Blatt enthaelt gleiche Anzahl an schwarzer Knoten
 	*/
+
+	TreeNode *k = anker, *node = nullptr;
+	std::queue<TreeNode*> q;
+	if (anker) {
+		q.push(anker);
+		while (!q.empty()) {
+			TreeNode *node = q.front();
+			node->print();
+			q.pop();
+
+			//enqueue left child
+			if (node->getLeft())
+				q.push(node->getLeft());
+
+			//enqueue right child
+			if (node->getRight())
+				q.push(node->getRight());
+		}
+	}
+
+	return true;
 }
 
 void Tree::printLevelOrder(void)

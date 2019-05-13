@@ -32,16 +32,16 @@ int main() {
 
 	//int result = Catch::Session().run();
 
-	Tree nTree;
-	nTree.addNode("Mayer", 20, 0, 0);
-	nTree.addNode("Mayer2", 10, 0, 0);
-	nTree.addNode("Mayer3", 35, 0, 0);
-	nTree.addNode("Mayer4", 26, 0, 0);
-	nTree.addNode("Mayer5", 40, 0, 0);
-	nTree.addNode("Mayer6", 25, 0, 0);
-	nTree.addNode("Mayer7", 30, 0, 0);
-	nTree.printAll();
-	/*
+	Tree t1;
+	t1.addNode("Mayer", 20, 0, 0);
+	t1.addNode("Mayer2", 10, 0, 0);
+	t1.addNode("Mayer3", 35, 0, 0);
+	t1.addNode("Mayer4", 26, 0, 0);
+	t1.addNode("Mayer5", 40, 0, 0);
+	t1.addNode("Mayer6", 25, 0, 0);
+	t1.addNode("Mayer7", 30, 0, 0);
+	t1.printAll();
+	
 	char choice{ -1 };
 	printmenu();
 	std::string name{ "" };
@@ -74,7 +74,7 @@ int main() {
 			break;
 		}
 	}
-	*/
+	
 	system("PAUSE");
 
 	return 0;

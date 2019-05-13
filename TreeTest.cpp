@@ -32,7 +32,7 @@ TreeNode * get_anker(Tree& Tr) {
 TEST_CASE("Tree Testing", "[TREE]" ) {
 	
 	Tree * nTree = new Tree();	
-	
+
 	SECTION("Hinzufuegen von Nodes und Suche - simple"){
 	
 		nTree->addNode("Mayer", 20, 0, 0);
@@ -41,7 +41,7 @@ TEST_CASE("Tree Testing", "[TREE]" ) {
 		nTree->addNode("Mayer4", 26, 0, 0);
 		nTree->addNode("Mayer5", 40, 0, 0);
 		nTree->addNode("Mayer6", 25, 0, 0);
-		nTree->addNode("Mayer7", 30, 0, 0);	
+		nTree->addNode("Mayer7", 30, 0, 0);
 						
 		REQUIRE(nTree->searchNode("Mayer") == true);
 		REQUIRE(nTree->searchNode("Mayer7") == true);

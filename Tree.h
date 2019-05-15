@@ -23,9 +23,12 @@ private:
 	void print_preorder(TreeNode*);
 	TreeNode* getParent(TreeNode *);
 	bool balanceTree(void);
+	//bool balanceTree(TreeNode *parent);
 	void printLevelOrder(void);
 	bool rotateTreeRight(TreeNode*, TreeNode*);
 	bool rotateTreeLeft(TreeNode*, TreeNode*);
+	bool rotateTreeRightLeft(TreeNode*, TreeNode*);
+	bool rotateTreeLeftRight(TreeNode*, TreeNode*);
 public:
 	Tree();
 	void addNode(std::string Name, int Alter, double Einkommen, int PLZ);
@@ -33,6 +36,7 @@ public:
 	// friend-Funktionen sind f�r die Tests erforderlich und m�ssen unangetastet bleiben! 
 	friend TreeNode * get_anker(Tree& TN);
 	void printAll() {
-		print_preorder(anker);
+		//print_preorder(anker);
+		printLevelOrder();
 	}
 };

@@ -15,7 +15,7 @@ using namespace std;
 void printmenu() {
 	std::cout << "1) Datensatz einfuegen, manuell" << std::endl
 		<< "2) Datensatz einfuegen, CSV Datei" << std::endl
-		<< "3) Datensatz loschen" << std::endl
+		<< "3) Datensatz loeschen" << std::endl
 		<< "4) Suchen" << std::endl
 		<< "5) Datenstruktur anzeigen" << std::endl;
 }
@@ -30,18 +30,10 @@ void readData(std::string& name, int& alter, double& einkommen, int& plz) {
 
 int main() {
 
-	//int result = Catch::Session().run();
+	int result = Catch::Session().run();
 
 	Tree t1;
-	t1.addNode("Mayer", 20, 0, 0);
-	t1.addNode("Mayer2", 10, 0, 0);
-	t1.addNode("Mayer3", 35, 0, 0);
-	t1.addNode("Mayer4", 26, 0, 0);
-	t1.addNode("Mayer5", 40, 0, 0);
-	t1.addNode("Mayer6", 25, 0, 0);
-	t1.addNode("Mayer7", 30, 0, 0);
-	t1.printAll();
-	
+
 	char choice{ -1 };
 	printmenu();
 	std::string name{ "" };
@@ -68,6 +60,7 @@ int main() {
 			break;
 		case 4:
 			std::cout << "klsjadiljnsdfo\n";
+			t1.printAll();
 			break;
 		default:
 			std::cout << "?> ";

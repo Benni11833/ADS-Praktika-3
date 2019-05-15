@@ -74,31 +74,58 @@ Tree::Tree()
 
 bool Tree::rotateTreeLeft(TreeNode *p1, TreeNode *p2)
 {
-	TreeNode *pp = getParent(p1);
+	if (p1 == anker)
+		anker = p2;
 	p1->setRight(p2->getLeft());
 	p2->setLeft(p1);
 
-	if (pp && p2->getNodePosID() < pp->getNodePosID())
-		pp->setLeft(p2);
-	else if(pp)
-		pp->setRight(p2);
+	if (getParent(p1))
+		getParent(p1)->setRight(p2);
 
 	return true;
 }
 
 bool Tree::rotateTreeRight(TreeNode *p1, TreeNode *p2)
 {
-	TreeNode *pp = getParent(p1);
-	p1->setLeft(p2->getRight());
-	p2->setRight(p1);
+	if (p2 == anker)
+		anker = p1;
+	p2->setLeft(p1->getRight());
+	p1->setRight(p2);
 
-	if (pp && p2->getNodePosID() < pp->getNodePosID())
-		pp->setLeft(p2);
-	else if (pp)
-		pp->setRight(p2);
+	if (getParent(p2))
+		getParent(p2)->setLeft(p1);
 
-	p2->setRed(false);
-	p1->setRed(true);
+	return true;
+}
+
+bool Tree::rotateTreeRightLeft(TreeNode *p1, TreeNode *p2) {
+	
+	TreeNode *pp{ p2->getLeft() };
+	if (p1 == anker)
+		anker = pp;
+	p2->setLeft(pp->getRight());
+	p1->setRight(pp->getLeft());
+	pp->setLeft(p1);
+	pp->setRight(p2);
+
+	if (getParent(p1))
+		getParent(p1)->setRight(pp);
+	
+	return true;
+}
+
+bool Tree::rotateTreeLeftRight(TreeNode *p1, TreeNode *p2) {
+
+	TreeNode *pp{ p2->getRight() };
+	if (p1 == anker)
+		anker = pp;
+	p2->setRight(pp->getLeft());
+	p1->setLeft(pp->getRight());
+	pp->setRight(p1);
+	pp->setLeft(p2);
+
+	if (getParent(p1))
+		getParent(p1)->setLeft(pp);
 
 	return true;
 }
@@ -110,23 +137,43 @@ void Tree::addNode(std::string Name, int Alter, double Einkommen, int PLZ)
 		TreeNode* y{ nullptr }, *x{ anker };
 		while (x) {
 			y = x;
+			if (!x->getRed() && x->getRight() && x->getRight()->getRed() 
+				&& x->getLeft() && x->getLeft()->getRed()) {	//alle schwarzen knoten mit zwei nachfolgern umfaerben
+				//std::cout << "Umfaerben...\n";
+				//x->setRed(true);	//umfaerben auf Rot
+				//Umfaerben aller Kinder
+				std::queue<TreeNode*> q;
+				q.push(x);
+				while (!q.empty()) {
+					TreeNode *node = q.front();
+					q.pop();
+					
+					node->setRed(!node->getRed());	//umfaerben
+
+					if (node->getLeft())
+						q.push(node->getLeft());
+					if (node->getRight())
+						q.push(node->getRight());
+				}
+				//std::cout << "Umfaerben ende...\n";
+			}
 			if (NodePosID < x->getNodePosID())
 				x = x->getLeft();
 			else
 				x = x->getRight();
 		}
-		if (!y) {	//anker == nullptr
-			new_entry->setRed(false);	//anker muss schwarz sein
+		if (!y)	//anker == nullptr
 			anker = new_entry;
-		}
 		else
 			if (NodePosID < y->getNodePosID())
 				y->setLeft(new_entry);
 			else
 				y->setRight(new_entry);
-		if (getParent(new_entry)->getRed() && new_entry->getRed())	//wenn New_entry und parent rot sind, alle umfaerben außer wurzel
+
+		anker->setRed(false);	//anker immer schwarz
+		
+		while (balanceTree()) //balanciert baum - moegliche verletzungen beim umfaerben
 			;
-		//balanceTree();	//balanciert baum
 }
 
 bool Tree::searchNode(std::string Name)
@@ -157,32 +204,66 @@ bool Tree::searchNode(std::string Name)
 
 bool Tree::balanceTree(void)	//durchlaeuft baum, prueft ob balanciert(rotiert) werden muss
 {
-	/*
-	Kinder von roten Knoten sind schwarz
-	Keine zwei aufeinanderfolgende rote Knoten
-	--> Jeder Pfad von k zu einem Blatt enthaelt gleiche Anzahl an schwarzer Knoten
-	*/
-
+	//auf einanderfolgende rote knoten finden:
 	TreeNode *k = anker, *node = nullptr;
-	std::queue<TreeNode*> q;
-	if (anker) {
-		q.push(anker);
-		while (!q.empty()) {
-			TreeNode *node = q.front();
-			node->print();
-			q.pop();
+		std::queue<TreeNode*> q;
+		if (anker) {
+			q.push(anker);
+			while (!q.empty()) {
+				TreeNode *node = q.front();
+				q.pop();
 
-			//enqueue left child
-			if (node->getLeft())
-				q.push(node->getLeft());
+				//Rotationen notewendig?
+				if (node && !node->getRed() && node->getRight() && node->getRight()->getRed()
+					&& node->getRight()->getRight() && node->getRight()->getRight()->getRed()) {
+					node->setRed(true);
+					node->getRight()->setRed(false);
+					rotateTreeLeft(node, node->getRight());
+					anker->setRed(false);	//anker immer schwarz
+					std::cout << "rot 1\n";
+					return true;
+				}
+				if(node && !node->getRed() && node->getLeft() && node->getLeft()->getRed()
+					&& node->getLeft()->getLeft() && node->getLeft()->getLeft()->getRed()){
+					node->getLeft()->setRed(false);
+					node->setRed(true);
+					rotateTreeRight(node->getLeft(), node);
+					anker->setRed(false);	//anker immer schwarz
+					std::cout << "rot 2\n";
+					return true;
+				}
 
-			//enqueue right child
-			if (node->getRight())
-				q.push(node->getRight());
+				if (node && !node->getRed() && node->getRight() && node->getRight()->getRed()
+					&& node->getRight()->getLeft() && node->getRight()->getLeft()->getRed()) {
+					node->setRed(true);
+					node->getRight()->getLeft()->setRed(false);
+					rotateTreeRightLeft(node, node->getRight());
+					anker->setRed(false);	//anker immer schwarz
+					std::cout << "rot 3\n";
+					return true;
+				}
+
+				if (node && !node->getRed() && node->getLeft() && node->getLeft()->getRed()
+					&& node->getLeft()->getRight() && node->getLeft()->getRight()->getRed()) {
+					node->setRed(true);
+					node->getLeft()->getRight()->setRed(false);
+					rotateTreeLeftRight(node, node->getLeft());
+					anker->setRed(false);	//anker immer schwarz
+					std::cout << "rot 4\n";
+					return true;
+				}
+
+				//enqueue left child
+				if (node->getLeft())
+					q.push(node->getLeft());
+
+				//enqueue right child
+				if (node->getRight())
+					q.push(node->getRight());
+			}
 		}
-	}
 
-	return true;
+	return false;
 }
 
 void Tree::printLevelOrder(void)

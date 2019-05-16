@@ -30,7 +30,7 @@ void readData(std::string& name, int& alter, double& einkommen, int& plz) {
 
 int main() {
 
-	int result = Catch::Session().run();
+	//int result = Catch::Session().run();
 
 	Tree t1;
 

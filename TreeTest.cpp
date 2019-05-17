@@ -246,7 +246,7 @@ TEST_CASE("TreeNode Testing", "[TREENODE]" ) {
 		REQUIRE(ref->getEinkommen() == 0);
 		REQUIRE(ref->getLeft() == nullptr);
 		REQUIRE(ref->getRight() == nullptr);
-		REQUIRE(ref->getNodeID() == 1);
+		REQUIRE(ref->getNodeID() == 0);
 		REQUIRE(ref->getNodePosID() == 20);
 		REQUIRE(ref->getPLZ() == 0);
 	}
@@ -272,8 +272,8 @@ TEST_CASE("TreeNode Testing", "[TREENODE]" ) {
 		REQUIRE(ref->getPLZ() == 1000);
 			
 	}	
-	delete ref;
-	delete smallTree;
+	//delete ref;
+	//delete smallTree;
 }
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // http://www.hashemall.com/

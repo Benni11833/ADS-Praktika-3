@@ -76,11 +76,11 @@ bool Tree::rotateTreeLeft(TreeNode *p1, TreeNode *p2)
 {
 	if (p1 == anker)
 		anker = p2;
-	p1->setRight(p2->getLeft());
-	p2->setLeft(p1);
-
 	if (getParent(p1))
 		getParent(p1)->setRight(p2);
+
+	p1->setRight(p2->getLeft());
+	p2->setLeft(p1);
 
 	return true;
 }
@@ -89,11 +89,11 @@ bool Tree::rotateTreeRight(TreeNode *p1, TreeNode *p2)
 {
 	if (p2 == anker)
 		anker = p1;
-	p2->setLeft(p1->getRight());
-	p1->setRight(p2);
-
 	if (getParent(p2))
 		getParent(p2)->setLeft(p1);
+	
+	p2->setLeft(p1->getRight());
+	p1->setRight(p2);
 
 	return true;
 }
@@ -103,13 +103,14 @@ bool Tree::rotateTreeRightLeft(TreeNode *p1, TreeNode *p2) {
 	TreeNode *pp{ p2->getLeft() };
 	if (p1 == anker)
 		anker = pp;
+
+	if (getParent(p1))
+		getParent(p1)->setRight(pp);
+	
 	p2->setLeft(pp->getRight());
 	p1->setRight(pp->getLeft());
 	pp->setLeft(p1);
 	pp->setRight(p2);
-
-	if (getParent(p1))
-		getParent(p1)->setRight(pp);
 	
 	return true;
 }
@@ -119,13 +120,13 @@ bool Tree::rotateTreeLeftRight(TreeNode *p1, TreeNode *p2) {
 	TreeNode *pp{ p2->getRight() };
 	if (p1 == anker)
 		anker = pp;
+	if (getParent(p1))
+		getParent(p1)->setLeft(pp);
+
 	p2->setRight(pp->getLeft());
 	p1->setLeft(pp->getRight());
 	pp->setRight(p1);
 	pp->setLeft(p2);
-
-	if (getParent(p1))
-		getParent(p1)->setLeft(pp);
 
 	return true;
 }

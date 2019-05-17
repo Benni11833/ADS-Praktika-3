@@ -33,6 +33,16 @@ int main() {
 	//int result = Catch::Session().run();
 
 	Tree t1;
+	for (int i = 0; i < 124; i++)
+	{
+		if (i == 13)
+			std::cout << "i == 13!!...\n";
+		string info = "Name-" + to_string(i);
+
+		// Random Einkommen und PLZ
+		t1.addNode(info, 0, i, 52006-i);
+		std::cout << "i = " << i << std::endl;
+	}
 
 	char choice{ -1 };
 	printmenu();

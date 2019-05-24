@@ -76,8 +76,14 @@ bool Tree::rotateTreeLeft(TreeNode *p1, TreeNode *p2)
 {
 	if (p1 == anker)
 		anker = p2;
-	if (getParent(p1))
-		getParent(p1)->setRight(p2);
+	if (getParent(p1)) {
+		if (getParent(p1)->getLeft() == p1)
+			getParent(p1)->setLeft(p2);
+		else
+			getParent(p1)->setRight(p2);
+	}
+	p2->setRed(false);
+	p1->setRed(true);
 
 	p1->setRight(p2->getLeft());
 	p2->setLeft(p1);
@@ -87,13 +93,20 @@ bool Tree::rotateTreeLeft(TreeNode *p1, TreeNode *p2)
 
 bool Tree::rotateTreeRight(TreeNode *p1, TreeNode *p2)
 {
-	if (p2 == anker)
-		anker = p1;
-	if (getParent(p2))
-		getParent(p2)->setLeft(p1);
+	if (p1 == anker)
+		anker = p2;
+	if (getParent(p1)) {
+		if (getParent(p1)->getLeft() == p1)
+			getParent(p1)->setLeft(p2);
+		else
+			getParent(p1)->setRight(p2);
+	}
 	
-	p2->setLeft(p1->getRight());
-	p1->setRight(p2);
+	p2->setRed(false);
+	p1->setRed(true);
+
+	p1->setLeft(p2->getRight());
+	p2->setRight(p1);
 
 	return true;
 }
@@ -104,9 +117,16 @@ bool Tree::rotateTreeRightLeft(TreeNode *p1, TreeNode *p2) {
 	if (p1 == anker)
 		anker = pp;
 
-	if (getParent(p1))
-		getParent(p1)->setRight(pp);
+		if (getParent(p1)) {
+			if (getParent(p1)->getLeft() == p1)
+				getParent(p1)->setLeft(pp);
+			else
+				getParent(p1)->setRight(pp);
+		}
 	
+	p1->setRed(true);
+	pp->setRed(false);
+
 	p2->setLeft(pp->getRight());
 	p1->setRight(pp->getLeft());
 	pp->setLeft(p1);
@@ -120,8 +140,15 @@ bool Tree::rotateTreeLeftRight(TreeNode *p1, TreeNode *p2) {
 	TreeNode *pp{ p2->getRight() };
 	if (p1 == anker)
 		anker = pp;
-	if (getParent(p1))
-		getParent(p1)->setLeft(pp);
+	if (getParent(p1)) {
+		if (getParent(p1)->getLeft() == p1)
+			getParent(p1)->setLeft(pp);
+		else
+			getParent(p1)->setRight(pp);
+	}
+
+	pp->setRed(false);
+	p1->setRed(true);
 
 	p2->setRight(pp->getLeft());
 	p1->setLeft(pp->getRight());
@@ -140,24 +167,11 @@ void Tree::addNode(std::string Name, int Alter, double Einkommen, int PLZ)
 			y = x;
 			if (!x->getRed() && x->getRight() && x->getRight()->getRed() 
 				&& x->getLeft() && x->getLeft()->getRed()) {	//alle schwarzen knoten mit zwei nachfolgern umfaerben
-				//std::cout << "Umfaerben...\n";
-				//x->setRed(true);	//umfaerben auf Rot
-				//Umfaerben aller Kinder
-				std::queue<TreeNode*> q;
-				q.push(x);
-				while (!q.empty()) {
-					TreeNode *node = q.front();
-					q.pop();
-					
-					node->setRed(!node->getRed());	//umfaerben
-
-					if (node->getLeft())
-						q.push(node->getLeft());
-					if (node->getRight())
-						q.push(node->getRight());
-				}
-				//std::cout << "Umfaerben ende...\n";
+				x->setRed(true);
+				x->getLeft()->setRed(false);
+				x->getRight()->setRed(false);
 			}
+
 			if (NodePosID < x->getNodePosID())
 				x = x->getLeft();
 			else
@@ -170,7 +184,6 @@ void Tree::addNode(std::string Name, int Alter, double Einkommen, int PLZ)
 				y->setLeft(new_entry);
 			else
 				y->setRight(new_entry);
-
 		anker->setRed(false);	//anker immer schwarz
 		
 		while (balanceTree()) //balanciert baum - moegliche verletzungen beim umfaerben
@@ -217,18 +230,17 @@ bool Tree::balanceTree(void)	//durchlaeuft baum, prueft ob balanciert(rotiert) w
 				//Rotationen notewendig?
 				if (node && !node->getRed() && node->getRight() && node->getRight()->getRed()
 					&& node->getRight()->getRight() && node->getRight()->getRight()->getRed()) {
-					node->setRed(true);
-					node->getRight()->setRed(false);
 					rotateTreeLeft(node, node->getRight());
+					//node->setRed(true);
 					anker->setRed(false);	//anker immer schwarz
 					std::cout << "rot 1\n";
 					return true;
 				}
 				if(node && !node->getRed() && node->getLeft() && node->getLeft()->getRed()
 					&& node->getLeft()->getLeft() && node->getLeft()->getLeft()->getRed()){
-					node->getLeft()->setRed(false);
-					node->setRed(true);
-					rotateTreeRight(node->getLeft(), node);
+					rotateTreeRight(node, node->getLeft());
+					//getParent(node)->setRed(false);
+					//node->setRed(true);
 					anker->setRed(false);	//anker immer schwarz
 					std::cout << "rot 2\n";
 					return true;
@@ -236,9 +248,10 @@ bool Tree::balanceTree(void)	//durchlaeuft baum, prueft ob balanciert(rotiert) w
 
 				if (node && !node->getRed() && node->getRight() && node->getRight()->getRed()
 					&& node->getRight()->getLeft() && node->getRight()->getLeft()->getRed()) {
-					node->setRed(true);
-					node->getRight()->getLeft()->setRed(false);
 					rotateTreeRightLeft(node, node->getRight());
+					/*node->setRed(true);
+					if (node->getRight())
+						node->getRight()->getLeft()->setRed(false);*/
 					anker->setRed(false);	//anker immer schwarz
 					std::cout << "rot 3\n";
 					return true;
@@ -246,9 +259,10 @@ bool Tree::balanceTree(void)	//durchlaeuft baum, prueft ob balanciert(rotiert) w
 
 				if (node && !node->getRed() && node->getLeft() && node->getLeft()->getRed()
 					&& node->getLeft()->getRight() && node->getLeft()->getRight()->getRed()) {
-					node->setRed(true);
-					node->getLeft()->getRight()->setRed(false);
 					rotateTreeLeftRight(node, node->getLeft());
+					/*node->setRed(true);
+					if (node->getLeft())
+						node->getLeft()->getRight()->setRed(false);*/
 					anker->setRed(false);	//anker immer schwarz
 					std::cout << "rot 4\n";
 					return true;

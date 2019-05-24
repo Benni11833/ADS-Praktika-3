@@ -91,6 +91,7 @@ TEST_CASE("Tree Testing", "[TREE]" ) {
 		nTree->addNode("Mayer2", 10, 0, 0);
 		nTree->addNode("Mayer3", 30, 0, 0);
 
+
 		TreeNode * tanker = get_anker(*nTree);
 		REQUIRE(tanker->getRed() == false);
 		REQUIRE(tanker->getLeft()->getRed() == true);
@@ -219,14 +220,14 @@ TEST_CASE("Tree Testing", "[TREE]" ) {
 			string info = "Name-"+to_string(i);
 			
 			// Random Einkommen und PLZ
-			double r = rand()+1;
+			int r = rand()+1;
 			int plz = rand() + 1;
 			nTree->addNode(info, 0, r, plz);
 		}
 		nTree->printAll();
 		std::cout << "========================================" << endl;
 		std::cout << "Testausgabe des Grossbaums abgeschlossen" << endl;
-	} 	
+	}
 }
 
 /***********************************************

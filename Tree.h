@@ -23,7 +23,6 @@ private:
 	void print_preorder(TreeNode*);
 	TreeNode* getParent(TreeNode *);
 	bool balanceTree(void);
-	//bool balanceTree(TreeNode *parent);
 	void printLevelOrder(void);
 	bool rotateTreeRight(TreeNode*, TreeNode*);
 	bool rotateTreeLeft(TreeNode*, TreeNode*);
